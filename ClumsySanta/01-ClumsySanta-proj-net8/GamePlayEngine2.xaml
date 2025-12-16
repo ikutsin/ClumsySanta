@@ -1,0 +1,75 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="ClumsySanta.GamePlayEngine2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:ClumsySanta.ViewModel"
+    xmlns:findAPresents="clr-namespace:ClumsySanta" xmlns:controls="clr-namespace:ClumsySanta.Redist.Controls"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="False">
+
+    <phone:PhoneApplicationPage.DataContext>
+        <viewModel:GamePlayEngineViewModel />
+    </phone:PhoneApplicationPage.DataContext>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid Margin="0" x:Name="LayoutRoot" >
+        <ScrollViewer ManipulationMode="Control"  
+            Loaded="ScrollView_OnLoaded" x:Name="Scroller"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Hidden">
+
+            <!--http://msdn.microsoft.com/en-us/library/windowsphone/develop/ff967560(v=vs.105).aspx-->
+            <!--http://wp8beginner.blogspot.com/2013/03/pinch-to-zoom-within-scrollviewer.html-->
+            <!--https://github.com/sebastienjouhans/c-sharp-scrollviewer-snap-control/blob/master/Kinrou.Controls.ScrollViewerWithSnap.WP8/ScrollViewerWithSnap.xaml.cs-->
+            <Canvas x:Name="MainCanvas" Width="{Binding LevelModel.BgImgSize.Width}" Height="{Binding LevelModel.BgImgSize.Height}">
+                <!--<Canvas.Background>
+                    <ImageBrush 
+                        Stretch="Fill" AlignmentX="Right"
+                        ImageSource="{Binding LevelModel.BackgroundImage}" />
+                </Canvas.Background>-->
+                
+                <Image Stretch="None" Canvas.ZIndex="-99" Source="{Binding LevelModel.BackgroundImage}" />
+                <Image Canvas.Left="2000" Canvas.ZIndex="-99" x:Name="LaterBackgroundImage" Stretch="None" Source="{Binding LevelModel.LaterBackgroundImage}" />
+                
+                <Canvas x:Name="FirstDecorationsCanvas" />
+                <Canvas Canvas.Left="2000" x:Name="FirstLaterDecorationsCanvas" />
+                <Canvas x:Name="PresentsCanvas" />
+                <Canvas Canvas.Left="2000" x:Name="LaterPresentsCanvas" />
+                <Canvas x:Name="DecorationsCanvas" />
+                <Canvas Canvas.Left="2000" x:Name="LaterDecorationsCanvas" />
+            </Canvas>
+            
+
+            <!--<controls:LayoutTransformer x:Name="ZoomTransformer">
+                <controls:LayoutTransformer.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="MainCanvasTransform"
+                                        ScaleX=".5" ScaleY="2"/>
+                    </TransformGroup>
+                </controls:LayoutTransformer.LayoutTransform>
+                <controls:LayoutTransformer.Content>
+                    <Canvas>
+                        <Image Source="{Binding LevelModel.BackgroundImage}" />
+                        <Canvas x:Name="PresentsCanvas" />
+                        <Canvas x:Name="DecorationsCanvas" />
+                    </Canvas>
+                </controls:LayoutTransformer.Content>
+            </controls:LayoutTransformer>-->
+
+        </ScrollViewer>
+
+        <findAPresents:LevelTimer Timeout="OnLevelCompleted" TicksLeft="{Binding LevelModel.PlaybackTime.TotalSeconds}" Margin="0 20 60 0" Width="55" Icon="Assets/alarm.png" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="LevelTimer" />
+        <findAPresents:PresentsCounter Margin="0 20 0 0" 
+            PresentsToWait="{Binding LevelModel.PresentsToShow}" 
+            AllPresentsCollected="OnLevelCompleted" PresentIcon="{Binding LevelModel.TimerPresentIcon}" x:Name="PresentsCounter" />
+    </Grid>
+
+</phone:PhoneApplicationPage>
